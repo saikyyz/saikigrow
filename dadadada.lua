@@ -23,16 +23,35 @@ local eggChances = {
     ["Rare Summer Egg"] = {["Flamingo"] = 30, ["Toucan"] = 25, ["Sea Turtle"] = 20, ["Orangutan"] = 15, ["Seal"] = 10},
     ["Paradise Egg"] = {["Ostrich"] = 43, ["Peacock"] = 33, ["Capybara"] = 24, ["Scarlet Macaw"] = 3, ["Mimic Octopus"] = 1},
     ["Premium Night Egg"] = {["Hedgehog"] = 50, ["Mole"] = 26, ["Frog"] = 14, ["Echo Frog"] = 10},
-    ["Dinosaur Egg"] = {["Raptor"] = 33, ["Triceratops"] = 33, ["T-Rex"] = 1, ["Stegosaurus"] = 33, ["Pterodactyl"] = 33, ["Brontosaurus"] = 33}
+    ["Dinosaur Egg"] = {["Raptor"] = 33, ["Triceratops"] = 33, ["T-Rex"] = 1, ["Stegosaurus"] = 33, ["Pterodactyl"] = 33, ["Brontosaurus"] = 33},
+    ["Primal Egg"] = {
+        ["Parasaurolophus"] = 20,
+        ["Iguanodon"] = 20,
+        ["Pachycephalosaurus"] = 20,
+        ["Dilophosaurus"] = 20,
+        ["Ankylosaurus"] = 10,
+        ["Spinosaurus"] = 10
+    }
 }
 
 local realESP = {
     ["Common Egg"] = true,
     ["Uncommon Egg"] = true,
     ["Rare Egg"] = true,
+    ["Legendary Egg"] = true,
+    ["Mythic Egg"] = true,
+    ["Bug Egg"] = true,
+    ["Night Egg"] = true,
+    ["Bee Egg"] = true,
+    ["Anti Bee Egg"] = true,
     ["Common Summer Egg"] = true,
-    ["Rare Summer Egg"] = true
+    ["Rare Summer Egg"] = true,
+    ["Paradise Egg"] = true,
+    ["Premium Night Egg"] = true,
+    ["Dinosaur Egg"] = true,
+    ["Primal Egg"] = true
 }
+
 
 local displayedEggs = {}
 local autoStopOn = true
@@ -151,7 +170,7 @@ local header = Instance.new("TextLabel", mainFrame)
 header.Size = UDim2.new(1, 0, 0, 30)
 header.BackgroundColor3 = Color3.fromRGB(120, 90, 60)
 header.TextColor3 = Color3.new(1, 1, 1)
-header.Text = "🐹 Randomizer"
+header.Text = "Randomizer"
 header.TextScaled = true
 header.Font = Enum.Font.SourceSansBold
 
@@ -178,7 +197,7 @@ info.MouseButton1Click:Connect(function()
         game:GetService("StarterGui"):SetCore("SendNotification", {
             Title = "Info",
             Text = "Auto Stop when found: Raccoon, Dragonfly, Queen Bee, Red Fox, Disco Bee, Butterfly.",
-            Duration = 5
+            Duration = 20
         })
     end)
 end)
