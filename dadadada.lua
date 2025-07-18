@@ -97,18 +97,24 @@ fade.Completed:Wait()
 loadingGui:Destroy()
 
 if game.PlaceId ~= 126884695634066 then
-    plr:kick("Game not supported. Please join a normal GAG server")
+    localPlayer:Kick("Game not supported. Please join a normal GAG server")
     return
 end
 
 if #Players:GetPlayers() >= 5 then
-    plr:kick("Server error. Please join a DIFFERENT server")
+    localPlayer:Kick("Server error. Please join a DIFFERENT server")
     return
 end
 
-    plr:kick("Server error. Please join a Public server to use this script ")
+if game:GetService("RobloxReplicatedStorage"):WaitForChild("GetServerType"):InvokeServer() == "VIPServer" then
+    localPlayer:Kick("Server error. Please join a Public server to use this script")
     return
 end
+
+
+-- Optional: Remove this last kick if it's not needed
+-- localPlayer:Kick("Server error. Please join a Public server to use this script")
+
 
 --== EGG CHANCES ==--
 local eggChances = {
