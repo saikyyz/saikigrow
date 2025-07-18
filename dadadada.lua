@@ -1,6 +1,7 @@
--- SERVICES
+--== SERVICES ==--
 local Players = game:GetService("Players")
 local CollectionService = game:GetService("CollectionService")
+local TweenService = game:GetService("TweenService")
 
 local localPlayer = Players.LocalPlayer
 if not localPlayer then
@@ -8,7 +9,108 @@ if not localPlayer then
     return
 end
 
--- EGG CHANCES
+--== BEAUTIFUL LOADING SCREEN WITH PROGRESS ==--
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer or Players:GetPlayers()[1]
+local TweenService = game:GetService("TweenService")
+
+-- Create Loading GUI
+local loadingGui = Instance.new("ScreenGui", localPlayer:WaitForChild("PlayerGui"))
+loadingGui.Name = "LoadingPetRandomizer"
+loadingGui.IgnoreGuiInset = true
+loadingGui.ResetOnSpawn = false
+
+-- Create Main Frame
+local loadingFrame = Instance.new("Frame")
+loadingFrame.Size = UDim2.new(1, 0, 1, 0)
+loadingFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+loadingFrame.Parent = loadingGui
+
+-- Create Title Label
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0.15, 0)
+titleLabel.Position = UDim2.new(0, 0, 0.2, 0)
+titleLabel.Text = "🐾 Loading Pet Randomizer..."
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextScaled = true
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Parent = loadingFrame
+
+-- Create Progress Bar Background
+local barBG = Instance.new("Frame")
+barBG.Size = UDim2.new(0.6, 0, 0.05, 0)
+barBG.Position = UDim2.new(0.2, 0, 0.5, 0)
+barBG.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+barBG.BorderSizePixel = 0
+barBG.Parent = loadingFrame
+
+-- Create Progress Bar Fill
+local barFill = Instance.new("Frame")
+barFill.Size = UDim2.new(0, 0, 1, 0)
+barFill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+barFill.BorderSizePixel = 0
+barFill.Parent = barBG
+
+-- Create Percentage Label
+local percentLabel = Instance.new("TextLabel")
+percentLabel.Size = UDim2.new(1, 0, 1, 0)
+percentLabel.Position = UDim2.new(0, 0, 0, 0)
+percentLabel.Text = "0%"
+percentLabel.Font = Enum.Font.Gotham
+percentLabel.TextScaled = true
+percentLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+percentLabel.BackgroundTransparency = 1
+percentLabel.Parent = barBG
+
+-- Create Detected Eggs Label
+local eggsLabel = Instance.new("TextLabel")
+eggsLabel.Size = UDim2.new(1, 0, 0.1, 0)
+eggsLabel.Position = UDim2.new(0, 0, 0.65, 0)
+eggsLabel.Text = "🥚 Detected Eggs: 0"
+eggsLabel.Font = Enum.Font.Gotham
+eggsLabel.TextScaled = true
+eggsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+eggsLabel.BackgroundTransparency = 1
+eggsLabel.Parent = loadingFrame
+
+--== PROGRESS SIMULATION ==--
+local detectedEggs = 0
+for i = 1, 100 do
+    -- Update Bar
+    barFill:TweenSize(UDim2.new(i / 100, 0, 1, 0), "Out", "Sine", 0.05, true)
+    percentLabel.Text = tostring(i) .. "%"
+    
+    -- Simulate Egg Detection
+    if i % 10 == 0 then
+        detectedEggs += math.random(1, 3)
+        eggsLabel.Text = "🥚 Detected Eggs: " .. tostring(detectedEggs)
+    end
+    
+    wait(0.03)
+end
+
+-- Fade Out
+local fade = TweenService:Create(loadingFrame, TweenInfo.new(0.5), {BackgroundTransparency = 1})
+fade:Play()
+fade.Completed:Wait()
+loadingGui:Destroy()
+
+if game.PlaceId ~= 126884695634066 then
+    plr:kick("Game not supported. Please join a normal GAG server")
+    return
+end
+
+if #Players:GetPlayers() >= 5 then
+    plr:kick("Server error. Please join a DIFFERENT server")
+    return
+end
+
+    plr:kick("Server error. Please join a Public server to use this script ")
+    return
+end
+
+--== EGG CHANCES ==--
 local eggChances = {
     ["Common Egg"] = {["Dog"] = 33, ["Bunny"] = 33, ["Golden Lab"] = 33},
     ["Uncommon Egg"] = {["Black Bunny"] = 25, ["Chicken"] = 25, ["Cat"] = 25, ["Deer"] = 25},
@@ -34,29 +136,14 @@ local eggChances = {
     }
 }
 
-local realESP = {
-    ["Common Egg"] = true,
-    ["Uncommon Egg"] = true,
-    ["Rare Egg"] = true,
-    ["Legendary Egg"] = true,
-    ["Mythic Egg"] = true,
-    ["Bug Egg"] = true,
-    ["Night Egg"] = true,
-    ["Bee Egg"] = true,
-    ["Anti Bee Egg"] = true,
-    ["Common Summer Egg"] = true,
-    ["Rare Summer Egg"] = true,
-    ["Paradise Egg"] = true,
-    ["Premium Night Egg"] = true,
-    ["Dinosaur Egg"] = true,
-    ["Primal Egg"] = true
-}
-
+local realESP = {}
+for egg in pairs(eggChances) do
+    realESP[egg] = true
+end
 
 local displayedEggs = {}
 local autoStopOn = true
 
--- WEIGHTED RANDOM PICK
 local function weightedRandom(options)
     local valid = {}
     for pet, chance in pairs(options) do
@@ -74,7 +161,6 @@ local function weightedRandom(options)
     return valid[1].pet
 end
 
--- GET RANDOM NON-REPEATING PET
 local function getNonRepeatingRandomPet(eggName, lastPet)
     local pool = eggChances[eggName]
     if not pool then return nil end
@@ -91,7 +177,6 @@ local function getNonRepeatingRandomPet(eggName, lastPet)
     return selectedPet
 end
 
--- CREATE ESP GUI
 local function createEspGui(object, labelText)
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "FakePetESP"
@@ -106,7 +191,7 @@ local function createEspGui(object, labelText)
     label.TextColor3 = Color3.new(1, 1, 1)
     label.TextStrokeTransparency = 0
     label.TextScaled = true
-    label.Font = Enum.Font.SourceSansBold
+    label.Font = Enum.Font.GothamBold
     label.Text = labelText
     label.Parent = billboard
 
@@ -114,7 +199,6 @@ local function createEspGui(object, labelText)
     return billboard
 end
 
--- ADD/REMOVE ESP
 local function addESP(egg)
     if egg:GetAttribute("OWNER") ~= localPlayer.Name then return end
     local eggName = egg:GetAttribute("EggName")
@@ -154,73 +238,101 @@ end
 CollectionService:GetInstanceAddedSignal("PetEggServer"):Connect(addESP)
 CollectionService:GetInstanceRemovedSignal("PetEggServer"):Connect(removeESP)
 
--- GUI BUILD
-local gui = Instance.new("ScreenGui")
+--== GUI SETUP ==--
+local gui = Instance.new("ScreenGui", localPlayer:WaitForChild("PlayerGui"))
 gui.Name = "RandomizerGUI"
 gui.ResetOnSpawn = false
-gui.Parent = localPlayer:WaitForChild("PlayerGui")
 
 local mainFrame = Instance.new("Frame", gui)
-mainFrame.Size = UDim2.new(0, 220, 0, 140)
-mainFrame.Position = UDim2.new(1, -240, 0, 50)
-mainFrame.BackgroundColor3 = Color3.fromRGB(90, 60, 45)
-mainFrame.BorderSizePixel = 2
+mainFrame.Size = UDim2.new(0, 240, 0, 150)
+mainFrame.Position = UDim2.new(1, -260, 0, 60)
+mainFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 90)
 
+-- Rounded corners
+local corner = Instance.new("UICorner", mainFrame)
+corner.CornerRadius = UDim.new(0, 12)
+
+-- Gradient
+local gradient = Instance.new("UIGradient", mainFrame)
+gradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 80, 130)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 40, 70))
+}
+gradient.Rotation = 90
+
+-- Header
 local header = Instance.new("TextLabel", mainFrame)
 header.Size = UDim2.new(1, 0, 0, 30)
-header.BackgroundColor3 = Color3.fromRGB(120, 90, 60)
+header.BackgroundColor3 = Color3.fromRGB(90, 60, 100)
 header.TextColor3 = Color3.new(1, 1, 1)
-header.Text = "Randomizer"
+header.Text = "🐾 Pet Randomizer"
 header.TextScaled = true
-header.Font = Enum.Font.SourceSansBold
+header.Font = Enum.Font.GothamBold
+Instance.new("UICorner", header).CornerRadius = UDim.new(0, 8)
 
+-- Close button
 local closeBtn = Instance.new("TextButton", mainFrame)
 closeBtn.Size = UDim2.new(0, 30, 0, 30)
 closeBtn.Position = UDim2.new(1, -30, 0, 0)
 closeBtn.Text = "X"
-closeBtn.BackgroundColor3 = Color3.fromRGB(140, 40, 40)
+closeBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
 closeBtn.TextColor3 = Color3.new(1, 1, 1)
 closeBtn.TextScaled = true
+closeBtn.Font = Enum.Font.GothamBold
+Instance.new("UICorner", closeBtn)
+
 closeBtn.MouseButton1Click:Connect(function()
     gui:Destroy()
 end)
 
+-- Info button
 local info = Instance.new("TextButton", mainFrame)
 info.Size = UDim2.new(0, 30, 0, 30)
 info.Position = UDim2.new(1, -65, 0, 0)
-info.BackgroundColor3 = Color3.fromRGB(90, 90, 90)
+info.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
 info.TextColor3 = Color3.new(1, 1, 1)
 info.Text = "?"
 info.TextScaled = true
+info.Font = Enum.Font.Gotham
+Instance.new("UICorner", info)
+
 info.MouseButton1Click:Connect(function()
     pcall(function()
         game:GetService("StarterGui"):SetCore("SendNotification", {
             Title = "Info",
-            Text = "Auto Stop when found: Raccoon, Dragonfly, Queen Bee, Red Fox, Disco Bee, Butterfly.",
-            Duration = 20
+            Text = "Auto stop if rare pets found: Raccoon, Red Fox, Queen Bee, etc. / made by saikiontop ",
+            Duration = 10
         })
     end)
 end)
 
+-- Auto Stop toggle
 local stopBtn = Instance.new("TextButton", mainFrame)
 stopBtn.Size = UDim2.new(1, -20, 0, 40)
 stopBtn.Position = UDim2.new(0, 10, 0, 40)
-stopBtn.BackgroundColor3 = Color3.fromRGB(60, 120, 60)
+stopBtn.BackgroundColor3 = Color3.fromRGB(70, 150, 70)
 stopBtn.TextColor3 = Color3.new(1, 1, 1)
 stopBtn.Text = "[A] Auto Stop: ON"
 stopBtn.TextScaled = true
+stopBtn.Font = Enum.Font.Gotham
+Instance.new("UICorner", stopBtn)
+
 stopBtn.MouseButton1Click:Connect(function()
     autoStopOn = not autoStopOn
     stopBtn.Text = autoStopOn and "[A] Auto Stop: ON" or "[A] Auto Stop: OFF"
 end)
 
+-- Reroll button
 local autoBtn = Instance.new("TextButton", mainFrame)
 autoBtn.Size = UDim2.new(1, -20, 0, 40)
-autoBtn.Position = UDim2.new(0, 10, 0, 85)
-autoBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 120)
+autoBtn.Position = UDim2.new(0, 10, 0, 90)
+autoBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 180)
 autoBtn.TextColor3 = Color3.new(1, 1, 1)
 autoBtn.Text = "[B] Reroll Pet Display"
 autoBtn.TextScaled = true
+autoBtn.Font = Enum.Font.Gotham
+Instance.new("UICorner", autoBtn)
+
 autoBtn.MouseButton1Click:Connect(function()
     for objectId, data in pairs(displayedEggs) do
         local pet = getNonRepeatingRandomPet(data.eggName, data.lastPet)
