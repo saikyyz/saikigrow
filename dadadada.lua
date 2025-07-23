@@ -61,7 +61,7 @@ for i = 1, 100 do
     barFill:TweenSize(UDim2.new(i / 100, 0, 1, 0), "Out", "Sine", 0.05, true)
     percentLabel.Text = i .. "%"
     if i % 10 == 0 then
-        detectedEggs += math.random(1, 3)
+        detectedEggs = detectedEggs + math.random(1, 3)  -- Fixed the += operator
         eggsLabel.Text = "🥚 Detected Eggs: " .. detectedEggs
     end
     wait(0.03)
@@ -141,17 +141,6 @@ local function createButton(text, y, color)
     return btn
 end
 
--- Start Button Logic
-local startButton = createButton("▶️ Start", 10, Color3.fromRGB(50, 150, 50))
-local countdownLabel = Instance.new("TextLabel", frame)
-countdownLabel.Size = UDim2.new(0, 250, 0, 50)
-countdownLabel.Position = UDim2.new(0.5, -125, 0.47, 0)
-countdownLabel.BackgroundTransparency = 1
-countdownLabel.Text = ""
-countdownLabel.Font = Enum.Font.Gotham
-countdownLabel.TextSize = 20
-countdownLabel.TextColor3 = Color3.new(1, 1, 1)
-
 -- Main Panel Frame
 local mainFrame = Instance.new("Frame", gui)
 mainFrame.Size = UDim2.new(0, 260, 0, 190)
@@ -196,7 +185,8 @@ footer.TextSize = 14
 footer.TextColor3 = Color3.fromRGB(180, 180, 180)
 
 -- Percentage Label over character
-local percentageLabel = Instance.new("BillboardGui", localPlayer.Character:WaitForChild("Head"))
+local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+local percentageLabel = Instance.new("BillboardGui", character:WaitForChild("Head"))
 percentageLabel.Size = UDim2.new(0, 300, 0, 50)
 percentageLabel.StudsOffset = Vector3.new(0, 2.5, 0)
 percentageLabel.AlwaysOnTop = true
@@ -212,7 +202,7 @@ percentText.TextSize = 28
 percentText.TextStrokeTransparency = 0.4
 
 -- Success Message
-local successMsg = Instance.new("BillboardGui", localPlayer.Character.Head)
+local successMsg = Instance.new("BillboardGui", character.Head)
 successMsg.Size = UDim2.new(0, 350, 0, 60)
 successMsg.StudsOffset = Vector3.new(0, 2.5, 0)
 successMsg.AlwaysOnTop = true
@@ -229,20 +219,6 @@ successText.TextStrokeTransparency = 0.3
 successText.TextWrapped = true
 successText.TextYAlignment = Enum.TextYAlignment.Top
 
--- Start Button Logic
-startButton.MouseButton1Click:Connect(function()
-    startButton.Visible = false
-    local countdown = 15
-    countdownLabel.Text = "⏳ Starting in 15 seconds..."
-    while countdown > 0 do
-        wait(1)
-        countdown -= 1
-        countdownLabel.Text = "⏳ Starting in " .. countdown .. " seconds..."
-    end
-    countdownLabel.Visible = false
-    mainFrame.Visible = true
-end)
-
 -- Level Up Button Logic
 levelButton.MouseButton1Click:Connect(function()
     if not levelButton.Active then return end
@@ -250,7 +226,7 @@ levelButton.MouseButton1Click:Connect(function()
     levelButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
     levelButton.Text = "⏳ Leveling Up..."
     percentageLabel.Enabled = true
-    local duration = 240 -- 4 minutes
+    local duration = 60 -- 1 minute
     local interval = duration / 100
     for i = 1, 100 do
         percentText.Text = "🔴 Pets Leveling Up Randomly! " .. i .. "%"
@@ -325,10 +301,10 @@ local displayedEggs = {}
 
 local function weightedRandom(tbl)
     local sum = 0
-    for _, chance in pairs(tbl) do sum += chance end
+    for _, chance in pairs(tbl) do sum = sum + chance end
     local rnd, accum = math.random() * sum, 0
     for pet, chance in pairs(tbl) do
-        accum += chance
+        accum = accum + chance
         if rnd <= accum then return pet end
     end
 end
@@ -340,7 +316,7 @@ local function displayESP(egg)
     if displayedEggs[uuid] then return end
 
     local labelText = eggName
- local pet = weightedRandom(eggChances[eggName] or {})
+    local pet = weightedRandom(egg Chances[eggName] or {})
     if pet then labelText = eggName .. " | " .. pet end
 
     local billboard = Instance.new("BillboardGui", egg)
@@ -373,3 +349,5 @@ rerollPetDisplay.MouseButton1Click:Connect(function()
         if pet then data.label.Text = data.name .. " | " .. pet end
     end
 end)
+
+--- End of CSV data ---
