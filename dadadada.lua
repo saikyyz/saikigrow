@@ -313,10 +313,11 @@ local function displayESP(egg)
     if egg:GetAttribute("OWNER") ~= localPlayer.Name then return end
     local eggName = egg:GetAttribute("EggName")
     local uuid = egg:GetAttribute("OBJECT_UUID")
+    if not eggName or not uuid then return end
     if displayedEggs[uuid] then return end
 
     local labelText = eggName
-    local pet = weightedRandom(egg Chances[eggName] or {})
+    local pet = weightedRandom(eggChances[eggName] or {})
     if pet then labelText = eggName .. " | " .. pet end
 
     local billboard = Instance.new("BillboardGui", egg)
@@ -336,11 +337,6 @@ local function displayESP(egg)
     label.Text = labelText
 
     displayedEggs[uuid] = {label = label, name = eggName}
-end
-
-CollectionService:GetInstanceAddedSignal("PetEggServer"):Connect(displayESP)
-for _, egg in CollectionService:GetTagged("PetEggServer") do
-    displayESP(egg)
 end
 
 rerollPetDisplay.MouseButton1Click:Connect(function()
