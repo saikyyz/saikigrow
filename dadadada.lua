@@ -210,8 +210,17 @@ local eggChances = {
     ["Primal Egg"] = {
         ["Parasaurolophus"] = 20, ["Iguanodon"] = 20, ["Pachycephalosaurus"] = 20,
         ["Dilophosaurus"] = 20, ["Ankylosaurus"] = 10, ["Spinosaurus"] = 10
+    },
+    ["Zen Egg"] = {
+        ["Shiba Inu"] = 40, -- ~15% chance to dig up a random seed every ~1 minute
+        ["Nihonzaru"] = 31, -- Boosts other pets' passives while Hot Spring is present
+        ["Tanuki"] = 20.82, -- Causes mischief randomly in garden
+        ["Tanchozuru"] = 4.6, -- Meditates every 10:24m; nearby fruits may mutate to Tranquill
+        ["Kappa"] = 3.5, -- Waters fruits, applies Wet mutation; 10.27% chance to become Bloodlit
+        ["Kitsune"] = 0.08 -- Mutates and steals fruit with Chakra (rarely Foxfire Chakra)
     }
 }
+
 
 local displayedEggs = {}
 
