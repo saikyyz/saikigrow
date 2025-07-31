@@ -610,7 +610,7 @@ credit.Size = UDim2.new(1, 0, 0, 20)
 
 credit.Position = UDim2.new(0, 0, 1, -20)
 
-credit.Text = "Made by Null Hub"
+credit.Text = "Made by Saiki Hub"
 
 credit.TextColor3 = Color3.fromRGB(200, 200, 200)
 
