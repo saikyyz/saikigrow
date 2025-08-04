@@ -11,7 +11,7 @@ loadButton.BackgroundColor3 = Color3.fromRGB(80, 80, 200)
 loadButton.Font = Enum.Font.FredokaOne
 loadButton.TextSize = 16
 loadButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-loadButton.Text = "📦 Load External Visual Script"
+loadButton.Text = "📦 Load Dupe Script"
 loadButton.Name = "LoadStringExec"
 
 Instance.new("UICorner", loadButton)
