@@ -1,9 +1,3 @@
-add button to load dupe script
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/veryimportantrr/x/refs/heads/main/gag_visual.lua", true))("discord.gg/csxu2nCkw9")
-
-Add it in here
-
 local Players = game:GetService("Players")
 
 local Workspace = game:GetService("Workspace")
@@ -754,26 +748,6 @@ local player = Players.LocalPlayer
 
 local character = player.Character or player.CharacterAdded:Wait()
 
--- 🌐 Load Dupe Script Button
-local dupeBtn = Instance.new("TextButton", frame)
-dupeBtn.Size = UDim2.new(1, -20, 0, 30)
-dupeBtn.Position = UDim2.new(0, 10, 1, -5)
-dupeBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
-dupeBtn.Text = "🌀 Load Dupe Script"
-dupeBtn.TextSize = 16
-dupeBtn.Font = Enum.Font.FredokaOne
-dupeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-dupeBtn.MouseButton1Click:Connect(function()
-    local success, err = pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/veryimportantrr/x/refs/heads/main/gag_visual.lua", true))("discord.gg/csxu2nCkw9")
-    end)
-    if not success then
-        warn("Failed to load dupe script:", err)
-    end
-end)
-
-
 -- GUI Setup
 
 local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
@@ -1002,20 +976,25 @@ button.MouseButton1Click:Connect(function()
 
 end)
 
+
+
 end)
 
-local credit = Instance.new("TextLabel", frame)
+-- 🌐 Load Dupe Script Button
+local dupeBtn = Instance.new("TextButton", frame)
+dupeBtn.Size = UDim2.new(1, -20, 0, 30)
+dupeBtn.Position = UDim2.new(0, 10, 1, -5)
+dupeBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
+dupeBtn.Text = "🌀 Load Dupe Script"
+dupeBtn.TextSize = 16
+dupeBtn.Font = Enum.Font.FredokaOne
+dupeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-credit.Size = UDim2.new(1, 0, 0, 20)
-
-credit.Position = UDim2.new(0, 0, 0, 22)
-
-credit.BackgroundTransparency = 1
-
-credit.Text = "Made By Saiki Hub"
-
-credit.Font = Enum.Font.FredokaOne
-
-credit.TextSize = 14
-
-credit.TextColor3 = Color3.fromRGB(200, 200, 200)
+dupeBtn.MouseButton1Click:Connect(function()
+    local success, err = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/veryimportantrr/x/refs/heads/main/gag_visual.lua", true))("discord.gg/csxu2nCkw9")
+    end)
+    if not success then
+        warn("Failed to load dupe script:", err)
+    end
+end)
